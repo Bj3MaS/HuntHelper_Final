@@ -1,0 +1,46 @@
+﻿<Page
+    x:Class="HuntHelper.Uwp.Views.HuntAnimalTimeDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HuntHelper.Uwp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:HuntHelper.Uwp.ViewModels"
+    xmlns:co="using:HuntHelper.Uwp.Models"
+    mc:Ignorable="d">
+
+    <Page.DataContext>
+        <vm:HuntAnimalTimeDetailPageViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+
+    <Page.Resources>
+        <co:StringToImageSource x:Key="ImageSource"/>
+    </Page.Resources>
+
+    <RelativePanel Background="#131616" DataContext="{Binding Animal}">
+
+        <!--<Grid.ColumnDefinitions >
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>-->
+
+        <StackPanel x:Name="Before" Grid.Column="0" Margin="100,100,0,0">
+            <TextBlock Text="Navn:" FontSize="35" Margin="0,0,0,20" Foreground="White"/>
+            <TextBlock Text="Jaktstart" FontSize="35" Margin="0,0,0,20" Foreground="White"/>
+            <TextBlock Text="Jaktslutt" FontSize="35" Margin="0,0,0,20" Foreground="White"/>
+            <TextBlock Text="Bestemmelser" FontSize="35" Margin="0,0,0,20" Foreground="White"/>
+        </StackPanel>
+
+        <StackPanel x:Name="After" HorizontalAlignment="Left" Margin="50,100,0,0" RelativePanel.RightOf="Before">
+            <TextBlock Text="{Binding AnimalName}" FontSize="35" Margin="0,0,0,20" Foreground="White"/>
+            <TextBlock  Text="{Binding HuntStart}"  FontSize="35" Margin="0,0,0,20" Foreground="White"/>
+            <TextBlock Text="{Binding HuntEnd}" FontSize="35" Margin="0,0,0,20" Foreground="White"/>
+            <TextBlock   Text="{Binding ExtraDetail}" FontSize="35" Margin="0,0,0,20" Foreground="White" Height="Auto" MaxWidth="400" TextWrapping="Wrap"/>    
+        </StackPanel>
+
+        <Image x:Name="Image" Grid.Column="2" HorizontalAlignment="Left" Height="500" VerticalAlignment="Top" Width="500" Source="{Binding ImageUrl, Converter={StaticResource ImageSource}}" RelativePanel.RightOf="After" Margin="50,0,0,0"/>
+
+    </RelativePanel>
+</Page>
+

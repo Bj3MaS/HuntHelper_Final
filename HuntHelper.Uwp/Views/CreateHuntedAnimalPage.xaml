@@ -1,0 +1,128 @@
+﻿<Page
+    x:Class="HuntHelper.Uwp.Views.CreateHuntedAnimalPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HuntHelper.Uwp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:HuntHelper.Uwp.ViewModels"
+    xmlns:co="using:HuntHelper.Uwp.Models"
+    xmlns:model="using:HuntHelper.Model"
+    mc:Ignorable="d">
+
+    <Page.DataContext>
+        <vm:CreateHuntedAnimalPageViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+
+    <Page.Resources>
+        <co:ChangeIconConverter x:Key="ChangeIcon"/>
+        
+    </Page.Resources>
+
+ 
+
+    <Grid Background="#131616" IsHitTestVisible="{Binding Hit, Mode=TwoWay}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="9*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.ColumnSpan="3" Grid.RowSpan="2" Canvas.ZIndex="500" Visibility="{Binding Error, Mode=TwoWay}">
+            <Canvas Canvas.ZIndex="1000" Background="#EEA8A8A8" />
+            <TextBlock Text="En feil skjedde" FontSize="45" Foreground="Red" HorizontalAlignment="Center" Canvas.ZIndex="5000" VerticalAlignment="Center" Margin="0,0,0,520"/>
+            <Image Source="ms-appx:///Assets/JJYyatE.gif" Height="800" Width="800" Canvas.ZIndex="5000" />
+            <Button Margin="0,500,100,0" Canvas.ZIndex="5000" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Prøv igjen" Click="{x:Bind ViewModel.TryAgain}"/>
+            <Button Margin="100,500,0,0" Canvas.ZIndex="5000" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Avslutt App" Click="{x:Bind ViewModel.Exit}"/>
+            <Button/>
+        </Grid>
+
+        <ProgressRing x:Name="progressRing"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2"
+                      Grid.Row="0"
+                      Grid.RowSpan="2"
+                      Width="200"
+                      Height="200"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Foreground="White"
+                      IsActive="{Binding RingVisible}"
+                      RenderTransformOrigin="0.5,0.5" 
+                      Canvas.ZIndex="1000"
+                      
+                      >
+            <ProgressRing.RenderTransform>
+                <CompositeTransform x:Name="ProgressTransform" TranslateY="120" />
+            </ProgressRing.RenderTransform>
+        </ProgressRing>
+
+
+        <Grid Grid.ColumnSpan="2">
+            <TextBlock HorizontalAlignment="Center"  TextWrapping="Wrap" Text="Add huntedanimal!" VerticalAlignment="Top" FontSize="40" Margin="0 20,0,0" Foreground="White"/>
+
+        </Grid>
+
+        <Grid Grid.Row="1" DataContext="{Binding HuntedAnimal}" HorizontalAlignment="Right" Width="750">
+
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="6*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Text="Dyr:" Width="63" FontSize="36" Grid.Row="1" Foreground="White"/>
+            <ComboBox x:Name="ComboBoxSelected" ItemsSource="{x:Bind ViewModel.Animals, Mode=Oneway}"  SelectedItem="{Binding Animal, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectionChanged="{x:Bind ViewModel.SelectedAnimalAsync}" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="36" Grid.Row="1" Grid.Column="1" Width="220" Foreground="White" PlaceholderText="Please choose animal"/>
+            <SymbolIcon Grid.Column="1" Grid.Row="1" Symbol="{Binding ElementName=ComboBoxSelected, Path=SelectedItem, Converter={StaticResource ChangeIcon}}" HorizontalAlignment="Right" Foreground="White"/>
+            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Text="Antall Skudd:"  FontSize="36" Grid.Row="2" Foreground="White"/>
+            <TextBox x:Name="BulletCountText" MaxLength="5" Text ="{Binding BulletCount, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" KeyDown="{x:Bind ViewModel.OnlyNumbers, Mode=twoWay}" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"  Width="220" FontSize="36" Grid.Column="1" Grid.Row="2" Foreground="White" PlaceholderText="Type here"/>
+            <SymbolIcon Grid.Column="1" Grid.Row="2" Symbol="{Binding ElementName=BulletCountText, Path=Text, Converter={StaticResource ChangeIcon}}" HorizontalAlignment="Right" Foreground="White"/>
+            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Text="Vekt:"  Width="81" FontSize="36" Grid.Row="3" Foreground="White"/>
+            <TextBox x:Name="WeightText" MaxLength="5" Text="{Binding Weight ,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" KeyDown="{x:Bind ViewModel.OnlyNumbers, Mode=twoWay}"  HorizontalAlignment="Left" Margin="10,0,0,0"  VerticalAlignment="Center"  Width="220" FontSize="36" Grid.Column="1" Grid.Row="3" IsAccessKeyScope="True" Foreground="White" PlaceholderText="Type here"/>
+            <SymbolIcon Grid.Column="1" Grid.Row="3" Symbol="{Binding ElementName=WeightText, Path=Text, Converter={StaticResource ChangeIcon}}" HorizontalAlignment="Right" Foreground="White"/>
+            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Text="Poeng:" FontSize="36" Grid.Row="4" Foreground="White"/>
+            <TextBox x:Name="PointsText" DataContext="{x:Bind ViewModel}" Text ="{Binding HuntedAnimal.Points ,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" KeyDown="{x:Bind ViewModel.OnlyNumbers, Mode=OneWay}" IsEnabled="{ Binding Visible}" HorizontalAlignment="Left" Margin="10,0,0,0"  VerticalAlignment="Center"  Width="220" FontSize="36" Grid.Column="1" Grid.Row="4" IsAccessKeyScope="True" Foreground="White" PlaceholderText="Type here"/>
+            <SymbolIcon Grid.Column="1" Grid.Row="4"  DataContext="{x:Bind ViewModel}" Symbol="{Binding ElementName=PointsText, Path=Text, Converter={StaticResource ChangeIcon}}" Visibility="{Binding Visible}" HorizontalAlignment="Right" Foreground="White"/>
+            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Text="Dato:" FontSize="36" Grid.Row="5" Foreground="White"/>
+            <DatePicker Date="{x:Bind ViewModel.Date, Mode=OneWay}"  DateChanged="{x:Bind ViewModel.Time, Mode=OneWay, TargetNullValue=''}" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="36"  Width="220" Grid.Column="1" Grid.Row="5" Foreground="White"/>
+
+            <TextBlock Grid.Row="6" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" Margin="20,100,0,0" Foreground="White"/>
+
+            <Button Click="{x:Bind ViewModel.CreateObjectAsync}" Content="Add Animal" HorizontalAlignment="Left" Margin="0,100,0,0" VerticalAlignment="Top" IsEnabled="{Binding IsValid}" Grid.Column="1" Grid.Row="6" Foreground="White" Background="Gray"/>
+        </Grid>
+
+        <Grid Grid.Column="1" Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="6*"/>
+                <RowDefinition Height="*"/>
+               
+            </Grid.RowDefinitions>
+
+            <Image HorizontalAlignment="Left" Source="{Binding ImageSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,0,0" VerticalAlignment="Top" Stretch="Fill"/>
+
+            <Button Content="Add picture" Margin="20,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="{x:Bind ViewModel.GetImage}" Grid.Row="1" Foreground="White" BorderThickness="0.5" BorderBrush="White"/>
+           
+        </Grid>
+
+    </Grid>
+</Page>

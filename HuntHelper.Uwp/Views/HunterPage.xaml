@@ -1,0 +1,149 @@
+﻿<Page
+    x:Class="HuntHelper.Uwp.Views.HunterPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HuntHelper.Uwp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:vm="using:HuntHelper.Uwp.ViewModels"
+    xmlns:x1="using:System"
+    mc:Ignorable="d">
+
+
+
+    <Page.DataContext>
+        <vm:HunterPageViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+
+   
+
+    <Grid Background="#131616">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <Grid Grid.ColumnSpan="3" Grid.RowSpan="2" Canvas.ZIndex="500" Visibility="{Binding Error, Mode=TwoWay}">
+            <Canvas Canvas.ZIndex="1000" Background="#EEA8A8A8" />
+            <TextBlock Text="En feil skjedde" FontSize="45" Foreground="Red" HorizontalAlignment="Center" Canvas.ZIndex="5000" VerticalAlignment="Center" Margin="0,0,0,520"/>
+            <Image Source="ms-appx:///Assets/JJYyatE.gif" Height="800" Width="800" Canvas.ZIndex="5000" />
+            <Button Margin="0,500,100,0" Canvas.ZIndex="5000" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Prøv igjen" Click="{x:Bind ViewModel.TryAgain}"/>
+            <Button Margin="100,500,0,0" Canvas.ZIndex="5000" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Avslutt App" Click="{x:Bind ViewModel.Exit}"/>
+            <Button/>
+        </Grid>
+       
+
+        <ListView x:Name="AnimalView" ItemsSource="{x:Bind ViewModel.HuntedAnimals, Mode=TwoWay}" SelectedItem="{Binding HuntedAnimal, Mode=TwoWay}"   ItemClick="{x:Bind ViewModel.HuntedAnimalSelected}" IsItemClickEnabled="True" Grid.Column="0" Grid.RowSpan="2" Margin="0,40,0,48" Foreground="White">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="260">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Top">
+                            <Image Height="250" Width="250" Source="{Binding ImageUrl}" RequestedTheme="Dark" Stretch="Fill" Margin="0,10,0,10"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="10,20,0,0">
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Animal.AnimalName, Mode=TwoWay}" Foreground="White"/>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding DateTime}" Foreground="White" />
+                            <TextBlock TextWrapping="Wrap" Text="{Binding BulletCount}" Foreground="White"/>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Weight}" Foreground="White" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+        <Grid Grid.Column="1" Grid.Row="0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.ColumnSpan="2" Margin="50,0,0,0">
+                <StackPanel Orientation="Horizontal" >
+                    <Button Content="highest  weight" Click="{x:Bind ViewModel.GetHighestWeightButtonAsync}" Foreground="White" />
+                    <Button Content="highest  bulletcount" Click="{x:Bind ViewModel.GetHighestBulletCountButtonAsync}" Margin="10,0,0,0" Foreground="White"/>
+                    <Button Content="Get whole list" Click="{x:Bind ViewModel.GetFullHuntedAnimalListAsync}" Margin="10,0,0,0" Foreground="White"/>
+                </StackPanel>
+            </Grid>
+
+            
+            <StackPanel Grid.Row="1" HorizontalAlignment="Right" Margin="50,0,0,0">
+                <TextBlock/>
+                <TextBlock Text="Dyr:" FontSize="35" Foreground="White"/>
+                <TextBlock Text="Dato:" FontSize="35" Foreground="White"/>
+                <TextBlock Text="Våpen:" FontSize="35" Foreground="White"/>
+                <TextBlock Text="Kaliber:" FontSize="35" Foreground="White"/>
+                <TextBlock Text="Antall Skudd:" FontSize="35" Foreground="White"/>
+                <TextBlock Text="Vekt (Kg):" FontSize="35" Foreground="White"/>
+                <TextBlock Text="Poeng:" FontSize="35" Foreground="White"/>
+                <TextBlock Text="Lengdegrad:" FontSize="35" Foreground="White"/>
+                <TextBlock Text="Breddegrad:" FontSize="35" Foreground="White"/>
+            </StackPanel>
+
+            <StackPanel  DataContext="{Binding SelectedItem, ElementName=AnimalView , Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="20,0,0,0" >
+                <TextBlock/>
+                <TextBlock Text="{Binding Animal.AnimalName}" FontSize="35" Foreground="White"/>
+                <TextBlock Text="{Binding DateTime}" FontSize="35" Foreground="White"/>
+                <TextBlock Text="{Binding Hunter.Weapon.WeaponName}" FontSize="35" Foreground="White"/>
+                <TextBlock Text="{Binding Hunter.Weapon.Caliber}" FontSize="35" Foreground="White"/>
+                <TextBox x:Name="Bullet" Text="{Binding BulletCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" KeyUp="{x:Bind ViewModel.StartUpdate}"  KeyDown="{x:Bind ViewModel.OnlyNumbers, Mode=twoWay}" FontSize="35" BorderThickness="0.5" MaxLength="5" Height="46.552734375" Width="120" HorizontalAlignment="Left" Foreground="White" Background="#131616"/>
+                <TextBox x:Name="Weight"  Text="{Binding Weight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" KeyUp="{x:Bind ViewModel.StartUpdate}"  KeyDown="{x:Bind ViewModel.OnlyNumbers, Mode=twoWay}" FontSize="35" BorderThickness="0.5" MaxLength="5" Height="46.552734375" Width="120" HorizontalAlignment="Left" Foreground="White" Background="#131616"/>
+                <TextBlock Text="{Binding Points}" FontSize="35" Foreground="White" />
+                <TextBlock Text="{Binding Latitude}" FontSize="35" Foreground="White" />
+                <TextBlock Text="{Binding Longitude}" FontSize="35" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+        
+
+
+        <Maps:MapControl x:Name="MapControl" ZoomLevel="14" Center="{x:Bind ViewModel.Posistion, Mode=OneWay}" Grid.Column="1" Grid.Row="1" Loaded="{x:Bind ViewModel.Map_Loaded}">
+            <Grid HorizontalAlignment="Left" Maps:MapControl.Location="{Binding Posistion}" Maps:MapControl.NormalizedAnchorPoint="0.5,1">
+                <Image Source="/Assets/Pushpin.png" Grid.Row="1" Stretch="None"/>
+            </Grid>
+
+        </Maps:MapControl>
+
+        <!--<TextBlock Text="{Binding Value}" FontSize="20" Grid.RowSpan="2" Margin="10,882,190,43" Grid.Column="1" />-->
+
+        <StackPanel Grid.Column="2" Grid.RowSpan="2">
+
+            <AppBarButton Command="{x:Bind ViewModel.DeleteHuntedAnimalCommand}" CommandParameter="{Binding SelectedItem, ElementName=AnimalView}" Icon="Delete" Label="Delete Animal" Width="200" Foreground="White" BorderThickness="0.5" BorderBrush="White"/>
+            <AppBarButton Click="{x:Bind ViewModel.CreateObject}" Label="Add HuntedAnimal" Icon="Add" Width="200" Foreground="White" BorderThickness="0.5" BorderBrush="White" />
+
+
+
+        </StackPanel>
+
+        <AutoSuggestBox x:Name="SearchBox" ItemsSource="{x:Bind ViewModel.Resultat}" KeyUp="{x:Bind ViewModel.StartSearch}" Text="{Binding SearchWord, Mode=TwoWay}" QuerySubmitted="{x:Bind ViewModel.Search}" PlaceholderText="Search here..." >
+            <AutoSuggestBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <Run Text="{Binding AnimalName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    </TextBlock>
+                </DataTemplate>
+            </AutoSuggestBox.ItemTemplate>
+        </AutoSuggestBox>
+
+    </Grid>
+</Page>
